@@ -1,0 +1,15 @@
+name: Salesforce CI/CD
+
+on:
+  push:
+    branches: [main]  # Change to your desired branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: salesforce/salesforcedx-vscode@54.5.0  # Install Salesforce CLI
+      - run: sfdx force:auth:jwt:grant --clientid ${{ secrets.SALESFORCE_CLIENT_ID }} --username ${{ secrets.SALESFORCE_USERNAME }} --jwtkeyfile ${{ secrets.SALESFORCE_KEYFILE }} --setdefaultdevhubusername
+      - run: sfdx force:source:push --targetusername ${{ secrets.SALESFORCE_USERNAME }} --json --loglevel trace
